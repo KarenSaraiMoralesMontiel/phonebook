@@ -1,20 +1,30 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import PersonForm from './PersonForm'
 import Filter from './Filter'
 import PersonsFiltered from './PersonsFiltered'
+import axios from "axios"
 
+axios
+.get('http://localhost:3001/persons')
+.then(response => {
+  const persons = response.data
+  console.log(persons)
+})
 const App = () => {
-  const [persons, setPersons] = useState([
-    { id: 1, name: 'Arto Hellas', number: '040-123456'},
-    { id: 2, name: 'Ada Lovelace', number: '39-44-5323523'},
-    { id: 3, name: 'Dan Abramov', number: '12-43-23435'},
-    { id: 4, name: 'Mary Poppendieck', number: '39-23-64-6423122'}
-  ])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName]= useState({name: '', number: ''})
   const [newFilter, setNewFilter] = useState('')
+  useEffect( () => {
+    axios
+    .get('http://localhost:3001/persons')
+    .then(response => {
+      console.log("Entrand al then")
+      setPersons(response.data)
+    })
+  }, [])
   const repeated = persons.some((element) => element.name.toUpperCase() === newName.name.toUpperCase()) 
   //Add person function
-  const addPerson = (event) => {
+ const addPerson = (event) => {
     event.preventDefault()
     console.log(event.target)
     console.log(repeated)
@@ -54,7 +64,7 @@ const App = () => {
       <Filter handleFilter={handleFilter}/>
       <h2>add a New one</h2>
       <PersonForm
-        addPerson={addPerson}
+       addPerson={addPerson}
         newName={newName}
         handleNotChangeName={handleNotChangeName}
         handleNotChangeNumber={handleNotChangeNumber}/>
