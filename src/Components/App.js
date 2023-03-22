@@ -32,6 +32,11 @@ const App = () => {
     const repeated = persons.some((element) => element.name.toLocaleUpperCase() === personObject.name.toLocaleUpperCase()) 
     if (repeated && window.confirm(`Do you wish to update ${personObject.name} ?`)) {
       const person = persons.find(x => x.name.toUpperCase() === personObject.name.toUpperCase())
+      setMessage(`Updated ${person.name} number`)
+      setNumber(2)
+      setTimeout(()=> {
+        setNumber(0)
+        }, 5000)
       const person2 = {...person, number: personObject.number}
       personsServices
       .update(person.id, person2)
@@ -54,7 +59,6 @@ const App = () => {
         setPersons(persons.concat(response))
         
       })
-
       setMessage(`Added ${personObject.name}`)
       setNumber(2)
       setTimeout(()=> {
