@@ -29,8 +29,10 @@ const App = () => {
       name: newName.name ,
       number: newName.number}
 
-    const repeated = persons.some((element) => element.name.toLocaleUpperCase() === personObject.name.toLocaleUpperCase()) 
+    const repeated = (persons.some((element) => element.name.toLocaleUpperCase() === personObject.name.toLocaleUpperCase()) && personObject.number !== '')
+    
     if (repeated && window.confirm(`Do you wish to update ${personObject.name} ?`)) {
+
       const person = persons.find(x => x.name.toUpperCase() === personObject.name.toUpperCase())
       setMessage(`Updated ${person.name} number`)
       setNumber(2)
@@ -38,11 +40,13 @@ const App = () => {
         setNumber(0)
         }, 5000)
       const person2 = {...person, number: personObject.number}
+
       personsServices
       .update(person.id, person2)
       .then(response => {
         setPersons(persons.map(x => x.id !== person.id ? x: response))
       })
+
     .catch(error => {
       setPersons(persons.filter(x => x.id !== person.id))
       setMessage(`Information of ${person.name} has been deleted from the servers`)
@@ -52,7 +56,17 @@ const App = () => {
         }, 5000)
       })
     } 
-    else if (personObject.number !== '' || personObject.name !== '') {
+
+    else if (personObject.number === '' || personObject.name === '' ) {
+      setMessage(`Insufficient Data`)
+      setNumber(1)
+      setTimeout(()=> {
+        setNumber(0)
+      }, 5000)
+
+      
+    }
+    else {
       personsServices
       .create(personObject)
       .then(response => {
@@ -70,6 +84,7 @@ const App = () => {
   }
 
   const deleteNumber = (id) => {
+
     const person = persons.find(x => x.id === id)
     const persons2 = persons.filter(x => x.id !== id)
     if (window.confirm(`Delete ${person.name} ?` )) {
