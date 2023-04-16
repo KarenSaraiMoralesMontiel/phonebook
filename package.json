@@ -41,5 +41,5 @@
   "devDependencies": {
     "json-server": "^0.17.2"
   },
-  "proxy": "http://localhost:3001"
+  "proxy": "https://phonebook-server-private.onrender.com"
 }
